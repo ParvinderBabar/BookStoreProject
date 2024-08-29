@@ -17,7 +17,8 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Homepage/>
+      <Homepage />
+        
       {/* <Dashboard /> */}
     </ThemeProvider>
   );
