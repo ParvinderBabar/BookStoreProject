@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -10,14 +11,19 @@ import {
   Typography,
   Box,
 } from '@mui/material';
-
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Link as MuiLink } from '@mui/material';
-import Search  from '../Components/Search'; // Import the Search component
+import Search from '../Components/Search'; // Import the Search component
 
 function Homepage() {
-  const [searchTerm, setSearchTerm] = useState<string>(''); // State for search term
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
+  const navigate = useNavigate(); // Hook for navigation
+
+  const handleLoginClick = () => {
+    navigate('/login'); // Navigate to the login page when the icon is clicked
+  };
 
   return (
     <Box sx={{ flexGrow: 1, padding: 2 }}>
@@ -38,11 +44,21 @@ function Homepage() {
           <IconButton type="submit" sx={{ padding: '10px' }} aria-label="search">
             <SearchIcon />
           </IconButton>
+          {/* Account Icon Button */}
+          <IconButton
+            onClick={handleLoginClick}
+            sx={{ padding: '10px' }}
+            aria-label="go to login"
+          >
+            <AccountCircle fontSize="large" />
+          </IconButton>
         </Toolbar>
       </AppBar>
 
       {/* Search Component */}
- <Search searchTerm={searchTerm} />       {/* Rest of the Homepage content */}
+      <Search searchTerm={searchTerm} />
+
+      {/* Rest of the Homepage content */}
       <Box sx={{ flexGrow: 1, padding: 2 }}>
         <AppBar position="static" sx={{ backgroundColor: '#ffffff', color: '#000000' }}>
           <Toolbar>
