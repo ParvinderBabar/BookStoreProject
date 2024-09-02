@@ -6,6 +6,7 @@ import Homepage from './pages/Homepage'
  import Login from './pages/login';
 import { TranslatorProvider } from './contexts/TranslatorContext';
  import {  Route,Routes } from 'react-router-dom';
+import { Dashboard } from '@mui/icons-material';
 const theme = createTheme({
   palette: {
     primary: {
@@ -29,9 +30,9 @@ function App() {
         {/* <Dashboard /> */}
           {/* <Route path="/" element={<Navigate to="/search" replace />} /> */}
            <Route path="/" element={<Homepage />} />
-        <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-        <Homepage />
         
       
       </TranslatorProvider>

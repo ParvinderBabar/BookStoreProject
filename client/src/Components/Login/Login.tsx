@@ -1,30 +1,40 @@
-// src/components/Login/Login.jsx
 import React, { useContext } from "react";
 import { TranslatorContext } from "../../contexts/TranslatorContext";
 import translations from "../Login/LoginTranslations.json";
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button, Typography, Link } from "@mui/material"; // Corrected import for Link
+import { useNavigate } from "react-router-dom";
+
 // Define a type for translations object if needed
-interface translations {
+interface Translations {
   [key: string]: string;
 }
 
 function Login() {
   const context = useContext(TranslatorContext);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   if (!context) {
     return <p>Error: TranslatorContext not available.</p>;
   }
 
   const { language, setLanguage } = context;
-const t = (translations as Record<string, translations>)[language] || {};
+  const t = (translations as Record<string, Translations>)[language] || {};
+
   if (!t) {
     return <div>Error: Translations not found for the selected language.</div>;
   }
 
+  // Correctly type the event parameter
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => { // Type the event as React.FormEvent
+    e.preventDefault();
+    // Add your authentication logic here, and if successful:
+    navigate('/dashboard'); // Navigate to the dashboard page upon successful login
+  };
+
   return (
     <div>
       <Typography variant="h4">{t["Login"]}</Typography>
-      <form>
+      <form onSubmit={handleLogin}>
         <div className="form-group">
           <button
             type="button"
@@ -62,6 +72,12 @@ const t = (translations as Record<string, translations>)[language] || {};
           {t["Login"]}
         </Button>
       </form>
+      <div style={{ marginTop: '1rem' }}>
+        <Typography variant="body2">
+          {t["Don't have an account?"]}{" "}
+          <Link href="/signup">{t["Sign up"]}</Link>
+        </Typography>
+      </div>
     </div>
   );
 }
