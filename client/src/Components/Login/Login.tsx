@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { TranslatorContext } from "../../contexts/TranslatorContext";
 import translations from "../Login/LoginTranslations.json";
-import { TextField, Button, Typography, Link } from "@mui/material"; // Corrected import for Link
+import { TextField, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 // Define a type for translations object if needed
@@ -71,13 +71,11 @@ function Login() {
         <Button type="submit" variant="contained" color="primary">
           {t["Login"]}
         </Button>
+         <Button type="submit" variant="contained" color="primary">
+          {t["Sign Up"]} Sign Up
+        </Button>
       </form>
-      <div style={{ marginTop: '1rem' }}>
-        <Typography variant="body2">
-          {t["Don't have an account?"]}{" "}
-          <Link href="/signup">{t["Sign up"]}</Link>
-        </Typography>
-      </div>
+    
     </div>
   );
 }

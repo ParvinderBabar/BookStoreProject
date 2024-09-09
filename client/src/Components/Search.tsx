@@ -1,101 +1,60 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'react-query'; // Ensure 'react-query' is installed
 import axios from 'axios';
-import { Box, Typography, Grid, Card, CardMedia } from '@mui/material';
 
-// Define the interfaces for the API response
-interface ImageLinks {
-  thumbnail: string;
-}
-
-interface VolumeInfo {
-  title: string;
-  authors: string[];
-  imageLinks: ImageLinks;
-}
-
+// Define the type for book items
 interface BookItem {
   id: string;
-  volumeInfo: VolumeInfo;
+  volumeInfo: {
+    title: string;
+    authors: string[];
+    imageLinks: {
+      thumbnail: string;
+    };
+  };
 }
 
-interface BooksResponse {
-  items: BookItem[];
-}
-
-const fetchBooks = async (query: string): Promise<BookItem[]> => {
-  if (!query) {
-    return []; // Return an empty array if the query is empty
-  }
-
-  try {
-    const { data } = await axios.get<BooksResponse>(
-      'https://www.googleapis.com/books/v1/volumes',
-      {
-        params: {
-          q: query,
-          key: 'AIzaSyCHqIyV86wRIEsNxHFAcpuGikU5Y8D4aLY',
-        },
-      }
-    );
-    return data.items || [];
-  } catch (error) {
-    console.error('Error fetching books:', error);
-    throw new Error('Failed to fetch books');
-  }
+// Adjust the type to match the API response
+const fetchBooks = async (searchTerm: string): Promise<{ items: BookItem[] }> => {
+  const { data } = await axios.get(`https://api.example.com/books?q=${searchTerm}`);
+  return data;
 };
 
-// Define the props for the Search component
 interface SearchProps {
   searchTerm: string;
+  onSearchResults: (books: BookItem[]) => void;
 }
 
-// Search component for books
-const Search: React.FC<SearchProps> = ({ searchTerm }) => {
-  const { data: books = [], isLoading, isError, error } = useQuery({
-    queryKey: ['books', searchTerm],
-    queryFn: () => fetchBooks(searchTerm),
-    enabled: !!searchTerm, // Disable query when searchTerm is empty
-  });
+const Search: React.FC<SearchProps> = ({ searchTerm, onSearchResults }) => {
+  const { data, error, isLoading } = useQuery<{ items: BookItem[] }>(
+    ['searchBooks', searchTerm],
+    () => fetchBooks(searchTerm),
+    {
+      onSuccess: (data) => {
+        onSearchResults(data.items); // Pass data to parent component
+      },
+      enabled: !!searchTerm, // Only run the query if searchTerm is not empty
+    }
+  );
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (isError) {
-    return <p>Error: {error.message}</p>;
-  }
-
-  if (books.length === 0 && searchTerm) {
-    return <p>No results found for "{searchTerm}".</p>;
-  }
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>An error occurred</div>;
 
   return (
-    <Box sx={{ flexGrow: 1, padding: 2 }}>
-      <Typography variant="h6" sx={{ marginY: 2 }}>
-        Books
-      </Typography>
-      <Grid container spacing={2}>
-        {books.map((book) => (
-          <Grid item xs={12} sm={6} md={4} key={book.id}>
-            <Card>
-              <CardMedia
-                component="img"
-                height="140"
-                image={book.volumeInfo.imageLinks?.thumbnail || '/default-book-image.jpg'}
-                alt={book.volumeInfo.title}
-              />
-              <Box sx={{ padding: 2 }}>
-                <Typography variant="h6">{book.volumeInfo.title}</Typography>
-                <Typography variant="body2">
-                  {book.volumeInfo.authors?.join(', ') || 'Unknown Author'}
-                </Typography>
-              </Box>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+    <div>
+      {/* Display or process the data if needed */}
+      {data && (
+        <ul>
+          {data.items.map((book) => (
+            <li key={book.id}>
+              <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
+              <div>{book.volumeInfo.title}</div>
+              <div>{book.volumeInfo.authors.join(', ')}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 

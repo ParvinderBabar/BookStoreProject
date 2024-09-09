@@ -1,12 +1,12 @@
 "client"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-// import { Dashboard } from './Components/Dashboard';
-import Homepage from './pages/Homepage'
+import Dashboard from './pages/Dashboard';
+import Homepage from './pages/Homepage';
+import BookDetails from './pages/BookDetails';
 // import CreateAccount from './Components/CreateAccount/CreateAccount';
  import Login from './pages/login';
 import { TranslatorProvider } from './contexts/TranslatorContext';
  import {  Route,Routes } from 'react-router-dom';
-import { Dashboard } from '@mui/icons-material';
 const theme = createTheme({
   palette: {
     primary: {
@@ -31,7 +31,8 @@ function App() {
           {/* <Route path="/" element={<Navigate to="/search" replace />} /> */}
            <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/book/:id" element={<BookDetails />} />
       </Routes>
         
       
