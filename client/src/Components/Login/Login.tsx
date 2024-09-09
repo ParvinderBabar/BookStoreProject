@@ -1,17 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { TranslatorContext } from "../../contexts/TranslatorContext";
-import translations from "../Login/LoginTranslations.json";
+import translations from "./LoginTranslations.json";
 import { TextField, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 // Define a type for translations object if needed
 interface Translations {
   [key: string]: string;
 }
 
-function Login() {
+const Login = () => {
   const context = useContext(TranslatorContext);
   const navigate = useNavigate(); // Initialize useNavigate
+
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   if (!context) {
     return <p>Error: TranslatorContext not available.</p>;
@@ -25,10 +30,33 @@ function Login() {
   }
 
   // Correctly type the event parameter
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => { // Type the event as React.FormEvent
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Add your authentication logic here, and if successful:
-    navigate('/dashboard'); // Navigate to the dashboard page upon successful login
+    try {
+      const response = await axios.post("/api/signin", {
+        username,
+        password,
+      });
+
+      const { token } = response.data;
+      // Save token to local storage or context
+      localStorage.setItem("token", token);
+
+      // Navigate to the dashboard after successful sign-in
+      navigate("/bookshelf");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        // Assuming your error response has a structure like this:
+        const axiosError = err as { response?: { status: number } };
+        if (axiosError.response && axiosError.response.status === 401) {
+          setError("Unauthorized. Your username or password is incorrect.");
+        } else {
+          setError("An unexpected error occurred.");
+        }
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    }
   };
 
   return (
@@ -52,11 +80,13 @@ function Login() {
             Español
           </button>
           <TextField
-            label={t["Email"]}
-            type="email"
+            label={t["Username"]}
+            type="text"
             fullWidth
             margin="normal"
             variant="outlined"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="form-group">
@@ -66,18 +96,25 @@ function Login() {
             fullWidth
             margin="normal"
             variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <Button type="submit" variant="contained" color="primary">
           {t["Login"]}
         </Button>
-         <Button type="submit" variant="contained" color="primary">
-          {t["Sign Up"]} Sign Up
+        <Button
+          type="button"
+          variant="contained"
+          color="secondary"
+          onClick={() => navigate("/signup")}
+        >
+          {t["Sign Up"]}
         </Button>
+        {error && <Typography color="error">{error}</Typography>}
       </form>
-    
     </div>
   );
-}
+};
 
 export default Login;

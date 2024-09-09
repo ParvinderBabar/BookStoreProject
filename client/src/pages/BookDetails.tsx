@@ -21,7 +21,7 @@ const BookDetails: React.FC = () => {
   const book = bookDetails[id];
 
   return (
-    <BookCard title={book.title} author={book.author} bookId={id} />
+    <BookCard title={book.title}  bookId={id} />
   );
 };
 

@@ -10,15 +10,13 @@ import { TranslatorProvider } from './contexts/TranslatorContext.tsx';
 // Import something here
 const queryClient = new QueryClient();
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-     <BrowserRouter>
+ <StrictMode>
+    <BrowserRouter>
       <TranslatorProvider>
- <QueryClientProvider client={queryClient}>
-         <App />
-     
-</QueryClientProvider>  
-    </TranslatorProvider>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </TranslatorProvider>
     </BrowserRouter>
-    
-   </StrictMode>,
+  </StrictMode>
 )

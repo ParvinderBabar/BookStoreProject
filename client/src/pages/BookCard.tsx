@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 interface BookCardProps {
   title: string;
-  author: string;
+  
   bookId: string; // Unique identifier for routing
 }
 
-const BookCard: React.FC<BookCardProps> = ({ title, author, bookId }) => {
+const BookCard: React.FC<BookCardProps> = ({ title, bookId }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -20,9 +20,9 @@ const BookCard: React.FC<BookCardProps> = ({ title, author, bookId }) => {
       <CardActionArea onClick={handleClick}>
         <CardContent>
           <Typography variant="h6">{title}</Typography>
-          <Typography variant="body2" color="textSecondary">
+          {/* <Typography variant="body2" color="textSecondary">
             by {author}
-          </Typography>
+          </Typography> */}
         </CardContent>
       </CardActionArea>
     </Card>

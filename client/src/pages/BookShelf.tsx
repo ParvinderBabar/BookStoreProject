@@ -18,31 +18,33 @@ export function Dashboard() {
         return (
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-              <BookCard title="The Pragmatic Programmer" author="Andrew Hunt and David Thomas" bookId="1" />
+              <BookCard title="The Pragmatic Programmer" bookId="1" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-              <BookCard title="Clean Code" author="Robert C. Martin" bookId="2" />
+              <BookCard title="Clean Code" bookId="2" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-              <BookCard title="Atomic Habits" author="James Clear" bookId="3" />
+              <BookCard title="Atomic Habits" bookId="3" />
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={3}>
-              <BookCard title="The Art of Computer Programming" author="Donald Knuth" bookId="4" />
+              <BookCard title="The Art of Computer Programming"  bookId="4" />
             </Grid>
              <Grid item xs={12} sm={6} md={4} lg={3}>
-              <BookCard title="The Art of Computer Programming" author="Donald Knuth" bookId="4" />
+              <BookCard title="The Art of Computer Programming"  bookId="4" />
             </Grid>
              <Grid item xs={12} sm={6} md={4} lg={3}>
-              <BookCard title="The Art of Computer Programming" author="Donald Knuth" bookId="4" />
+              <BookCard title="The Art of Computer Programming" bookId="4" />
             </Grid>
              <Grid item xs={12} sm={6} md={4} lg={3}>
-              <BookCard title="The Art of Computer Programming" author="Donald Knuth" bookId="4" />
+              <BookCard title="The Art of Computer Programming"  bookId="4" />
             </Grid>
              <Grid item xs={12} sm={6} md={4} lg={3}>
-              <BookCard title="The Art of Computer Programming" author="Donald Knuth" bookId="4" />
+              <BookCard title="The Art of Computer Programming"  bookId="4" />
             </Grid>
           </Grid>
         );
+   
+
       case 'Books I\'ve Read':
         return <Typography>Books I've Read content here</Typography>;
       case 'Wishlist':
@@ -72,6 +74,10 @@ export function Dashboard() {
           <Typography variant="h6">Dashboard Menu</Typography>
           <Divider style={{ backgroundColor: '#ffffff', margin: '16px 0' }} />
           <List>
+            <ListItemButton onClick={() => handleMenuItemClick('My Bookshelf')}>
+  <ListItemText primary="My Bookshelf" />
+</ListItemButton>
+
             <ListItemButton onClick={() => handleMenuItemClick('Currently Reading')}>
               <ListItemText primary="Currently Reading" />
             </ListItemButton>

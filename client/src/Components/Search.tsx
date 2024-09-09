@@ -1,61 +1,85 @@
 import React from 'react';
-import { useQuery } from 'react-query'; // Ensure 'react-query' is installed
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { Box, Typography, Grid, Card, CardMedia } from '@mui/material';
 
-// Define the type for book items
-interface BookItem {
+interface Book {
   id: string;
-  volumeInfo: {
-    title: string;
-    authors: string[];
-    imageLinks: {
-      thumbnail: string;
-    };
+  title: string;
+  authors: string[];
+ imageLinks?: {
+    smallThumbnail?: string;
+    thumbnail?: string;
   };
 }
 
-// Adjust the type to match the API response
-const fetchBooks = async (searchTerm: string): Promise<{ items: BookItem[] }> => {
-  const { data } = await axios.get(`https://api.example.com/books?q=${searchTerm}`);
-  return data;
+const fetchBooks = async (query: string): Promise<Book[]> => {
+  if (!query) {
+    return [];
+  }
+
+  try {
+    const response = await axios.get(`/api/book/search/${query}`);
+    return response.data.books || []; // Assuming 'books' is an array of results from your API
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    throw new Error('Failed to fetch books');
+  }
 };
 
-interface SearchProps {
-  searchTerm: string;
-  onSearchResults: (books: BookItem[]) => void;
+interface SearchBooksProps {
+  searchTerm: string; // Received from Homepage component
 }
 
-const Search: React.FC<SearchProps> = ({ searchTerm, onSearchResults }) => {
-  const { data, error, isLoading } = useQuery<{ items: BookItem[] }>(
-    ['searchBooks', searchTerm],
-    () => fetchBooks(searchTerm),
-    {
-      onSuccess: (data) => {
-        onSearchResults(data.items); // Pass data to parent component
-      },
-      enabled: !!searchTerm, // Only run the query if searchTerm is not empty
-    }
-  );
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>An error occurred</div>;
+const SearchBooks: React.FC<SearchBooksProps> = ({ searchTerm }) => {
+  const { data: books = [], isLoading, isError, error } = useQuery({
+    queryKey: ['books', searchTerm],
+    queryFn: () => fetchBooks(searchTerm),
+    enabled: !!searchTerm, // Only run query if there's a search term
+  });
 
   return (
-    <div>
-      {/* Display or process the data if needed */}
-      {data && (
-        <ul>
-          {data.items.map((book) => (
-            <li key={book.id}>
-              <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
-              <div>{book.volumeInfo.title}</div>
-              <div>{book.volumeInfo.authors.join(', ')}</div>
-            </li>
-          ))}
-        </ul>
+    <Box sx={{ padding: 2 }}>
+      {searchTerm && (
+        <Typography variant="h5" sx={{ marginBottom: 3 }}>
+          Search Results for "{searchTerm}"
+        </Typography>
       )}
-    </div>
+
+      {/* Loading State */}
+      {isLoading && <Typography>Loading...</Typography>}
+
+      {/* Error Handling */}
+      {isError && <Typography color="error">Error: {(error as Error).message}</Typography>}
+
+      {/* Display Books */}
+      {books.length > 0 ? (
+        <Grid container spacing={2} sx={{ marginTop: 2 }}>
+          {books.map((book) => (
+            <Grid item xs={12} sm={6} md={4} key={book.id}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={book.imageLinks?.thumbnail || '/bestbooks2024.jpg'}
+                  alt={book.title}
+                />
+                <Box sx={{ padding: 2 }}>
+                  <Typography variant="h6">{book.title}</Typography>
+                  <Typography variant="body2">
+                    {book.authors?.join(', ') || 'Unknown Author'}
+                  </Typography>
+                </Box>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        // If no results are found and the user has typed something
+        searchTerm && !isLoading && <Typography>No results found for "{searchTerm}".</Typography>
+      )}
+    </Box>
   );
 };
 
-export default Search;
+export default SearchBooks;
