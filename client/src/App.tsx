@@ -30,20 +30,17 @@ function App() {
     <ThemeProvider theme={theme}>
       <TranslatorProvider>
         <Routes>
-        <Route path="/login" element={<Login />} />
+       
         
-          {/* <CreateAccount /> */}
-      
-        {/* <Dashboard /> */}
+         
           {/* <Route path="/" element={<Navigate to="/search" replace />} /> */}
-           <Route path="/" element={<Homepage />} />
-          {/* <Route path="/login" element={<Login />} /> */}
-          <Route path="/Bookshelf" element={<BookShelf />} />
+           <Route path="/" element={<ProtectedRoute><Homepage /></ProtectedRoute>} />
+          <Route path="/login" element={<ProtectedRoute><Login /></ProtectedRoute>} />
           <Route path="/book/:id" element={<BookDetails />} />
-          {/* <Route path="/" element={<SignIn />} /> */}
+         
     {/* <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} /> */}
     <Route path="/book/:id" element={<ProtectedRoute><BookDetails /></ProtectedRoute>} />
-    {/* <Route path="/bookshelf" element={<ProtectedRoute><Bookshelf /></ProtectedRoute>} /> */}
+    <Route path="/Bookshelf" element={<ProtectedRoute><BookShelf /></ProtectedRoute>} />
       </Routes>
         
       

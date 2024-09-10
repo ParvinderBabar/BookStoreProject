@@ -32,6 +32,7 @@ const Login = () => {
   // Correctly type the event parameter
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
       const response = await axios.post("/api/signin", {
         username,
@@ -103,14 +104,13 @@ const Login = () => {
         <Button type="submit" variant="contained" color="primary">
           {t["Login"]}
         </Button>
-        <Button
-          type="button"
-          variant="contained"
-          color="secondary"
-          onClick={() => navigate("/signup")}
-        >
-          {t["Sign Up"]}
+         <Button type="button" variant="contained" color="secondary"   onClick={() => navigate("/CreateAccount")}>
+          Sign Up
         </Button>
+        
+        
+        
+       
         {error && <Typography color="error">{error}</Typography>}
       </form>
     </div>
