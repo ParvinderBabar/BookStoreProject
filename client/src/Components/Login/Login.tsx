@@ -41,10 +41,12 @@ const Login = () => {
 
       const { token } = response.data;
       // Save token to local storage or context
-      localStorage.setItem("token", token);
+      // localStorage.setItem("token", token);
+      localStorage.setItem("authToken", token);
+
 
       // Navigate to the dashboard after successful sign-in
-      navigate("/bookshelf");
+navigate("/bookdashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
         // Assuming your error response has a structure like this:
